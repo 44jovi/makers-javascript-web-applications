@@ -19,10 +19,11 @@
           this.mainContainerEl = document.querySelector("#main-container");
         }
         displayMessage() {
-          const message = document.createElement("div");
-          message.textContent = "This message is displayed by JavaScript!";
-          message.setAttribute("id", "message");
-          this.mainContainerEl.append(message);
+          const message = document.querySelector("#message-input").value;
+          const messageEl = document.createElement("div");
+          messageEl.innerText = message;
+          messageEl.setAttribute("id", "message");
+          this.mainContainerEl.append(messageEl);
           console.log("Button clicked - #show-message-button");
         }
         hideMessage() {
