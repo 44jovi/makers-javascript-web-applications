@@ -10,6 +10,10 @@ class NotesModel {
     this.allNotes.push(note);
   }
 
+  setNotes(notes) {
+    this.allNotes = notes;
+  }
+
   reset() {
     this.allNotes = [];
   }
