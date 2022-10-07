@@ -8,9 +8,9 @@
   var require_notesApi = __commonJS({
     "notesApi.js"(exports, module) {
       var NotesApi2 = class {
-        loadNotes() {
-          fetch("http://localhost:3000/notes").then((response) => {
-            return response.json();
+        loadNotes(callback) {
+          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
+            callback(data);
           });
         }
       };
@@ -77,10 +77,15 @@
           this.inputEl = document.querySelector("#note-input").value;
           this.model.addNote(this.inputEl);
         }
-        displayNotesFromApi() {
-          const notes = this.api.loadNotes();
-          this.model.setNotes(notes);
-          this.displayNotes();
+        displayNotesFromApi(cb) {
+          this.api.loadNotes((notes) => {
+            console.log("Executing displayNotesFromApi()");
+            console.log(notes);
+            console.log("Data received from API and converted to JSON");
+            this.model.setNotes(notes);
+            this.displayNotes();
+            cb();
+          });
         }
       };
       module.exports = NotesView2;

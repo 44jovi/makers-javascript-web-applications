@@ -38,10 +38,16 @@ class NotesView {
     this.model.addNote(this.inputEl);
   }
 
-  displayNotesFromApi() {
-    const notes = this.api.loadNotes();
-    this.model.setNotes(notes);
-    this.displayNotes();
+  displayNotesFromApi(cb) {
+    this.api.loadNotes((notes) => {
+      console.log('Executing displayNotesFromApi()');
+      console.log(notes);
+      console.log('Data received from API and converted to JSON');
+      this.model.setNotes(notes);
+      this.displayNotes();
+
+      cb();
+    });
   }
 };
 

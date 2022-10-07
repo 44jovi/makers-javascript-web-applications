@@ -2,11 +2,15 @@
  * @jest-environment jsdom
  */
 
+// const { doesNotMatch } = require('assert');
 const fs = require('fs'); // to read non-JS files
+const { default: JSDOMEnvironment } = require('jest-environment-jsdom');
 const NotesModel = require('./notesModel');
 const NotesView = require('./notesView');
+
+jest.setTimeout(10000);
  
-describe('NotesView', () => {
+describe('NotesView class', () => {
   it('displays all notes', () => {
     document.body.innerHTML = fs.readFileSync('./index.html');
     const model = new NotesModel();
@@ -38,20 +42,26 @@ describe('NotesView', () => {
     expect(document.querySelector('#note-input').value).toEqual('');
   });
   
-  it('#displayNotesFromApi - returns notes from API class', () => {
+  it('#displayNotesFromApi - returns notes from API class', (done) => {
     document.body.innerHTML = fs.readFileSync('./index.html');
- 
-    const fakeApi = {
-      loadNotes: () => ['Note One', 'Note Two']
-    }
+    
     const model = new NotesModel();
+
+    const fakeApi = {
+      loadNotes: (callback) => {
+        callback(
+          ['Fake note 1', 'Fake note 2']          
+        );
+      }
+    };
+
     const view = new NotesView(model, fakeApi);
-
-    view.displayNotesFromApi();
-
-    expect(fakeApi.loadNotes()).toEqual(['Note One', 'Note Two']);
-    expect(document.querySelectorAll('div.note').length).toEqual(2);
-    expect(document.querySelectorAll('div.note')[0].textContent).toEqual('Note One');
-    expect(document.querySelectorAll('div.note')[1].textContent).toEqual('Note Two');
+    
+    view.displayNotesFromApi(() => {
+      expect(document.querySelectorAll('div.note').length).toEqual(2);
+      expect(document.querySelectorAll('div.note')[0].textContent).toEqual('Fake note 1');
+      expect(document.querySelectorAll('div.note')[1].textContent).toEqual('Fake note 2');
+      done();
+    });
   });
 });
