@@ -8,12 +8,13 @@ const { default: JSDOMEnvironment } = require('jest-environment-jsdom');
 const NotesModel = require('./notesModel');
 const NotesView = require('./notesView');
 
-jest.setTimeout(10000);
- 
+beforeEach(() => {
+  document.body.innerHTML = fs.readFileSync('./index.html');
+  model = new NotesModel();
+});
+
 describe('NotesView class', () => {
   it('displays all notes', () => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
-    const model = new NotesModel();
     const view = new NotesView(model);
 
     model.addNote('note 1');
@@ -24,8 +25,6 @@ describe('NotesView class', () => {
   });
    
   it('displays notes added by user via button', () => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
-    const model = new NotesModel();
     const view = new NotesView(model);
     const inputEl = document.querySelector('#note-input');
     const buttonEl = document.querySelector('#add-note-button');
@@ -43,10 +42,6 @@ describe('NotesView class', () => {
   });
   
   it('#displayNotesFromApi - returns notes from API class', (done) => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
-    
-    const model = new NotesModel();
-
     const fakeApi = {
       loadNotes: (callback) => {
         callback(
