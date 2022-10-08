@@ -18,11 +18,11 @@ class NotesApi {
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({"content": note}),
+      body: JSON.stringify({"content": note})
     })
       .then((response) => response.json())
       .then((data) => {
-          console.log('Success - new note added', data);
+          console.log('Success - new note added: ', data);
       })
       .catch((error) => {
           console.log('Error - failed to add new note', error);

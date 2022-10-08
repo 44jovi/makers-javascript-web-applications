@@ -8,9 +8,25 @@
   var require_notesApi = __commonJS({
     "notesApi.js"(exports, module) {
       var NotesApi2 = class {
+        constructor() {
+          this.url = "http://localhost:3000";
+        }
         loadNotes(callback) {
-          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
+          fetch(this.url + "/notes").then((response) => response.json()).then((data) => {
             callback(data);
+          });
+        }
+        createNote(note) {
+          fetch(this.url + "/notes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "content": note })
+          }).then((response) => response.json()).then((data) => {
+            console.log("Success - new note added: ", data);
+          }).catch((error) => {
+            console.log("Error - failed to add new note", error);
           });
         }
       };
@@ -47,7 +63,6 @@
   // notesView.js
   var require_notesView = __commonJS({
     "notesView.js"(exports, module) {
-      var NotesApi2 = require_notesApi();
       var NotesView2 = class {
         constructor(model2, api2) {
           this.model = model2;
@@ -60,11 +75,11 @@
           });
         }
         displayNotes() {
-          const allNotes = this.model.getNotes();
           const prevNotes = document.querySelectorAll(".note");
           prevNotes.forEach((note) => {
             note.remove();
           });
+          const allNotes = this.model.getNotes();
           allNotes.forEach((note) => {
             const noteEl = document.createElement("div");
             noteEl.textContent = note;
@@ -75,7 +90,10 @@
         }
         addNewNote() {
           this.inputEl = document.querySelector("#note-input").value;
+          console.log("User input value: " + this.inputEl);
+          this.api.createNote(this.inputEl);
           this.model.addNote(this.inputEl);
+          console.log("Added note to page and server: ", this.inputEl);
         }
         displayNotesFromApi(cb) {
           this.api.loadNotes((notes) => {

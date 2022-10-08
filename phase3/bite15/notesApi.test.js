@@ -39,5 +39,6 @@ describe('NotesApi class', () => {
     })}
 
     setTimeout(test, 1000);
+
   });
 });
