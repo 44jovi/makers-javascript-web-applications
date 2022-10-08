@@ -28,7 +28,9 @@ describe('NotesApi class', () => {
 
     const api = new NotesApi();
 
-    api.createNote('New remote note');
+    // empty callback as second argument
+    // to simulate how this method is used in NotesView
+    api.createNote('New remote note', () => {});
 
     const test = () => {
       api.loadNotes((returnedData) => {

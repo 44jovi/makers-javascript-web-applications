@@ -15,7 +15,7 @@ class NotesApi {
       });
   };  
   
-  createNote(note) {
+  createNote(note, cb) {
     fetch((this.url + '/notes'), {
       method: 'POST',
       headers: {
@@ -28,6 +28,7 @@ class NotesApi {
           console.log('Success - new note added: ', data);
       })
       .catch((error) => {
+          cb(error);
           console.log('Error - failed to add new note', error);
       })
   }

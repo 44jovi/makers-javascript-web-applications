@@ -18,7 +18,7 @@
             cb2(error);
           });
         }
-        createNote(note) {
+        createNote(note, cb) {
           fetch(this.url + "/notes", {
             method: "POST",
             headers: {
@@ -28,6 +28,7 @@
           }).then((response) => response.json()).then((data) => {
             console.log("Success - new note added: ", data);
           }).catch((error) => {
+            cb(error);
             console.log("Error - failed to add new note", error);
           });
         }
@@ -93,7 +94,9 @@
         addNewNote() {
           this.inputEl = document.querySelector("#note-input").value;
           console.log("User input value: " + this.inputEl);
-          this.api.createNote(this.inputEl);
+          this.api.createNote(this.inputEl, () => {
+            this.addNoteError();
+          });
           this.model.addNote(this.inputEl);
           console.log("Added note to page and server: ", this.inputEl);
         }
@@ -112,6 +115,12 @@
           dispErrMsgEl.textContent = "Server error";
           dispErrMsgEl.className = "error";
           this.mainContainerEl.append(dispErrMsgEl);
+        }
+        addNoteError() {
+          const noteErrMsg = document.createElement("div");
+          noteErrMsg.textContent = "Warning - note NOT saved to server. Server error.";
+          noteErrMsg.className = "error";
+          this.mainContainerEl.append(noteErrMsg);
         }
       };
       module.exports = NotesView2;
